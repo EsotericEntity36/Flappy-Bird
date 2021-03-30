@@ -1,0 +1,213 @@
+let birdY = 180
+let birdSpeedY = 0
+let grav = 0.2
+let start = 0
+let pipeMid = 200
+let pipeX = 615
+let pipeMid2 = 250
+let pipeX2 = 825
+let pipeMid3 = 150
+let pipeX3 = 1035
+let speedX = 3
+let score = 0
+let end = 0
+let backPos = 0
+let back2pos = 598
+let bird
+let back
+let pipeTop
+let pipeBottom
+let font
+
+function preload() {
+  bird = loadImage('bird.png')
+  back = loadImage('back.png')
+  bottomPipe = loadImage('bottomPipe.png')
+  topPipe = loadImage('topPipe.png')
+  font = loadFont('font.ttf')
+}
+
+function setup() {
+  createCanvas(600, 400);
+}
+
+function draw() {
+  background(220);
+  if (start > 0) {
+    runGame()
+  } else {
+    openingScreen()
+  }
+}
+
+function mousePressed() {
+  start = start + 1
+  if (end == 1) {
+    restart()
+  } else {
+    birdSpeedY = -5
+  }
+
+}
+
+function drawBird() {
+  image(bird, 75, birdY, 80, 50)
+  birdY = birdY + birdSpeedY
+  birdSpeedY = birdSpeedY + grav
+}
+
+function drawPipes() {
+  image(topPipe, pipeX, pipeMid - 260, 50, 200)
+  image(bottomPipe, pipeX, pipeMid + 60, 50, 200)
+  image(topPipe, pipeX2, pipeMid2 - 260, 50, 200)
+  image(bottomPipe, pipeX2, pipeMid2 + 60, 50, 200)
+  image(topPipe, pipeX3, pipeMid3 - 260, 50, 200)
+  image(bottomPipe, pipeX3, pipeMid3 + 60, 50, 200)
+}
+
+function movePipes() {
+  pipeX = pipeX - speedX
+  pipeX2 = pipeX2 - speedX
+  pipeX3 = pipeX3 - speedX
+  if (pipeX < -50) {
+    pipeX = 615
+    pipeMid = random(140, 260)
+  }
+  if (pipeX2 < -50) {
+    pipeX2 = 615
+    pipeMid2 = random(140, 260)
+  }
+  if (pipeX3 < -50) {
+    pipeX3 = 615
+    pipeMid3 = random(140, 260)
+  }
+}
+
+function scoreCount() {
+  if (pipeX == 75) {
+    score = score + 1
+  }
+  if (pipeX2 == 75) {
+    score = score + 1
+  }
+  if (pipeX3 == 75) {
+    score = score + 1
+  }
+}
+
+function openingScreen() {
+  image(back, 0, 0, 600, 400)
+  textFont(font)
+  textSize(100)
+  stroke(0)
+  strokeWeight(3)
+  fill(255)
+  text("FLAPPY BIRD", 155, 150)
+  textSize(50)
+  text("click to start", 220, 200)
+  textSize(50)
+  text("Click to flap and dont hit the pipes", 80, 320)
+}
+
+function endScreen() {
+  textSize(100)
+  textFont(font)
+  stroke(0)
+  fill(255, 0, 0)
+  strokeWeight(2)
+  text("GAME OVER", 160, 200)
+  textSize(45)
+  text("click to restart", 210, 250)
+}
+
+function runGame() {
+  drawBackground()
+  drawBird()
+  drawPipes()
+  movePipes()
+  scoreCount()
+  endGame()
+  displayScore()
+}
+
+function endGame() {
+  if (birdY > 360) {
+    endScreen()
+    end = end + 1
+    noLoop()
+  }
+  if (birdY > pipeMid + 20 && pipeX > 75 && pipeX < 130) {
+    endScreen()
+    end = end + 1
+    noLoop()
+  }
+  if (birdY > pipeMid2 + 20 && pipeX2 > 75 && pipeX2 < 130) {
+    endScreen()
+    end = end + 1
+    noLoop()
+  }
+  if (birdY > pipeMid3 + 20 && pipeX3 > 75 && pipeX3 < 130) {
+    endScreen()
+    end = end + 1
+    noLoop()
+  }
+  if (birdY < pipeMid - 70 && pipeX > 75 && pipeX < 130) {
+    endScreen()
+    end = end + 1
+    noLoop()
+  }
+  if (birdY < pipeMid2 - 70 && pipeX2 > 75 && pipeX2 < 130) {
+    endScreen()
+    end = end + 1
+    noLoop()
+  }
+  if (birdY < pipeMid3 - 70 && pipeX3 > 75 && pipeX3 < 130) {
+    endScreen()
+    end = end + 1
+    noLoop()
+  }
+}
+
+function restart() {
+  birdY = 180
+  birdSpeedY = 0
+  start = 0
+  pipeMid = 200
+  pipeX = 615
+  pipeMid2 = 250
+  pipeX2 = 825
+  pipeMid3 = 150
+  pipeX3 = 1035
+  speedX = 3
+  score = 0
+  end = 0
+  backPos = 0
+  back2pos = 598
+  loop()
+}
+
+function displayScore() {
+  textSize(50)
+  stroke(0)
+  strokeWeight(2)
+  fill(255)
+  textFont(font)
+  text("score ", 70, 35)
+  textFont('helvetca')
+  textSize(30)
+  strokeWeight(3)
+  text(score, 160, 35)
+}
+
+function drawBackground() {
+  image(back, backPos, 0, 600, 400)
+  backPos = backPos - 0.5
+  image(back, back2pos, 0, 600, 400)
+  back2pos = back2pos - 0.5
+  if (backPos < -600) {
+    backPos = 598
+  }
+  if (back2pos < -600) {
+    back2pos = 598
+  }
+}
